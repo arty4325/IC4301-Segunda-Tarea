@@ -1,0 +1,12 @@
+# Ignorar node_modules en la carpeta raíz…
+node_modules/
+
+# …y en cualquier subcarpeta (client/, server/, o donde sea)
+**/node_modules/
+
+# Otras cosas típicas que conviene ignorar
+.env
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
