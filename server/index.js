@@ -1,14 +1,14 @@
-// server/index.js
 require('dotenv').config();
 const express = require('express');
 const sql     = require('mssql');
 const cors    = require('cors');
 
 const app = express();
+app.set('trust proxy', true);
 app.use(cors());
 app.use(express.json());
 
-// Configuración de la conexión
+
 const dbConfig = {
   user:               process.env.DB_USER,
   password:           process.env.DB_PASS,
@@ -16,20 +16,45 @@ const dbConfig = {
   port:               parseInt(process.env.DB_PORT, 10),
   database:           process.env.DB_NAME,
   options: {
-    encrypt: true,              // si usas Azure
-    trustServerCertificate: true // útil en dev local
+    encrypt: true,
+    trustServerCertificate: true
   }
 };
 
-// Endpoint de prueba
-app.get('/api/usuarios', async (req, res) => {
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Faltan username o password' });
+  }
+
+
+  const clientIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress)
+                     .split(',')[0]
+                     .trim();
+
   try {
     await sql.connect(dbConfig);
-    const result = await sql.query`SELECT TOP 10 * FROM EMPLEADO`;
-    res.json(result.recordset);
+
+    const dbReq = new sql.Request();
+    dbReq
+      .input('inUsername',    sql.NVarChar(100), username)
+      .input('inPassword',    sql.NVarChar(256), password)
+      .input('inPostInIP',    sql.VarChar(45),   clientIp)
+      .output('outResultCode', sql.Int)
+      .output('outMessage',    sql.NVarChar(sql.MAX));
+
+    const result = await dbReq.execute('dbo.Login');
+    const code    = result.output.outResultCode;
+    const message = result.output.outMessage;
+
+    if (code === 0) {
+      return res.json({ resultCode: code, message });
+    } else {
+      return res.status(401).json({ resultCode: code, message });
+    }
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error de base de datos' });
+    console.error('Error al conectar o ejecutar SP:', err);
+    return res.status(500).json({ error: 'Error de base de datos' });
   }
 });
 
