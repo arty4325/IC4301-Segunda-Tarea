@@ -13,6 +13,9 @@ function Login({ onSuccess }) {
     try {
       const { data } = await axios.post('/api/login', { username, password });
       if (data.resultCode === 0) {
+        // credenciales EN localStorage
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
         onSuccess();
       } else {
         setError(data.message);
