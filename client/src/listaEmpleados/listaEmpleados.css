@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f9;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5rem;
+    padding: 4rem 2rem;
+    font-size: 1.2rem;
+    max-width: 1400px;
+    margin: auto;
+  }
+  
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 600px;
+  }
+  
+  .filter-bar {
+    margin-bottom: 2rem;
+  }
+  
+  .filter-bar input {
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    width: 70%;
+    margin-right: 0.5rem;
+  }
+  
+  .filter-bar button {
+    padding: 0.8rem 1.2rem;
+    font-size: 1.1rem;
+  }
+  
+  .employee-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 1.1rem;
+  }
+  
+  .employee-table th,
+  .employee-table td {
+    border: 1px solid #ccc;
+    padding: 14px 18px;
+    text-align: left;
+  }
+  
+  .employee-table tr {
+    cursor: pointer;
+  }
+  
+  .employee-table tr.selected {
+    background-color: #c9e1ff;
+  }
+  
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .consulta-panel {
+    border: 1px solid #ccc;
+    padding: 2rem;
+    width: 450px;
+    min-height: 300px;
+    font-size: 1.1rem;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+  }
+  
+  .actions-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 450px;
+  }
+  
+  .actions-right button {
+    padding: 14px;
+    font-size: 1.05rem;
+    cursor: pointer;
+  }
+  

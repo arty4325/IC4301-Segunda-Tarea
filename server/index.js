@@ -58,5 +58,42 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.post('/api/listarEmpleados', async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: 'Falta username' });
+  }
+
+  try {
+    let pool = await sql.connect(dbConfig);
+
+    const result = await pool.request()
+    .input('inUsername', sql.NVarChar(100), username)
+    .output('outResultCode', sql.Int)
+    .output('outMessage', sql.NVarChar(sql.MAX))
+    .execute('dbo.ListarEmpleados');
+
+    const code = result.output.outResultCode;
+    const message = result.output.outMessage;
+
+    if (code === 0) {
+      return res.json({
+        resultCode: code,
+        data: result.recordset || []
+      });
+    } else {
+      return res.status(400).json({
+        resultCode: code,
+        message: message
+      });
+    }
+
+  } catch (err) {
+    console.error('Error al conectar o ejecutar SP:', err);
+    return res.status(500).json({ error: 'Error de base de datos', detalle: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`API escuchando en puerto ${PORT}`));
