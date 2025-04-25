@@ -91,7 +91,6 @@ function EmployeeList() {
 
   const filtrar = () => {
     setError('');
-    console.log('Filtrando por:', filtro);
     if (!filtro.trim()) {
       listAll();
     } 
@@ -117,6 +116,8 @@ function EmployeeList() {
           />
           <button onClick={filtrar}>Filtrar</button>
         </div>
+  
+        {error && <div className="filter-error">{error}</div>}
   
         <table className="employee-table">
           <thead>
@@ -171,6 +172,7 @@ function EmployeeList() {
       </div>
     </div>
   );
+  
   
 }
 
