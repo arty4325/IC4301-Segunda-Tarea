@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './listaEmpleados.css';
 
-const empleadosEjemplo = [
-  { nombre: 'Ana Pérez', docIdentidad: '12345678', puesto: 'Cajero' },
-  { nombre: 'Luis Gómez', docIdentidad: '87654321', puesto: 'Asistente' },
-];
-
 function EmployeeList() {
   const [filtro, setFiltro] = useState('');
   const [empleados, setEmpleados] = useState([]);
@@ -14,24 +9,7 @@ function EmployeeList() {
   const [error, setError]       = useState('');
 
     useEffect(() => {
-        const payload = {
-            username: "Arturo"//TODO: coger del localStorage el username
-        };
-        const response = fetch('http://localhost:5000/api/listarEmpleados', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.resultCode === 0) {
-            setEmpleados(data.data);
-          } else {
-            setError(data.message);
-          }
-        });
+       listAll();
     }, []);
   
 
@@ -46,6 +24,87 @@ function EmployeeList() {
     }
   };
 
+  function listAll(){
+    const payload = {
+      username: "Arturo"//TODO: coger del localStorage el username
+    };
+    fetch('http://localhost:5000/api/empleados/listar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.resultCode === 0) {
+        setEmpleados(data.data);
+      } else {
+        setError(data.message);
+      }
+    });
+  }
+
+  function filterID(id) {
+    const payload = {
+      username: "Arturo",//TODO: coger del localStorage el username
+      cedula : id
+    };
+    fetch('http://localhost:5000/api/empleados/filtrarCedula', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.resultCode === 0) {
+        setEmpleados(data.data);
+      } else {
+        setError(data.message);
+      }
+    });
+  }
+
+  function filterName(name) {
+    const payload = {
+      username: "Arturo",//TODO: coger del localStorage el username
+      nombre : name
+    };
+    fetch('http://localhost:5000/api/empleados/filtrarNombre', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.resultCode === 0) {
+        setEmpleados(data.data);
+      } else {
+        setError(data.message);
+      }
+    });
+  }
+
+  const filtrar = () => {
+    setError('');
+    console.log('Filtrando por:', filtro);
+    if (!filtro.trim()) {
+      listAll();
+    } 
+    else if (/^\d{1,20}$/.test(filtro)){ //si es solo números
+      filterID(filtro);
+    } else if (/^[A-Za-z\s]{1,200}$/.test(filtro)) { //si es solo letras
+      filterName(filtro);
+    }
+    else {
+      setError('Entrada de filtro no válida.');
+    }
+  };
+
   return (
     <div className="container">
       <div className="left-panel">
@@ -56,7 +115,7 @@ function EmployeeList() {
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
-          <button>Filtrar</button>
+          <button onClick={filtrar}>Filtrar</button>
         </div>
   
         <table className="employee-table">
@@ -95,7 +154,7 @@ function EmployeeList() {
               <p><strong>Documento:</strong> {empleadoSeleccionado.ValorDocumentoIdentidad}</p>
               <p><strong>Nombre:</strong> {empleadoSeleccionado.Nombre}</p>
               <p><strong>Puesto:</strong> {empleadoSeleccionado.Puesto}</p>
-              <p><strong>Saldo Vacaciones:</strong> 10 días</p>
+              <p><strong>Saldo Vacaciones:</strong> {empleadoSeleccionado.SaldoVacaciones}</p>
             </div>
           ) : (
             <p>Selecciona un empleado y haz clic en "Consultar"</p>
