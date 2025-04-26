@@ -18,7 +18,8 @@ export default function App() {
       {/* Definición de rutas */}
       <Routes>
         {/* Ruta principal de Login */}
-        <Route path={BASE_ROUTE} element={<Login />} />
+        <Route path={BASE_ROUTE} element={<Login onSuccess={() => navigate('/empleados')} />} />
+
 
         {/* Redirige "/" a "/login" */}
         <Route path="/" element={<Navigate to={BASE_ROUTE} replace />} />
