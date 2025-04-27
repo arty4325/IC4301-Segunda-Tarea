@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './listaEmpleados.css';
+import { useNavigate } from 'react-router-dom';
 
 function EmployeeList() {
+  const [username] = useState(localStorage.getItem('username') || '');
   const [filtro, setFiltro] = useState('');
   const [empleados, setEmpleados] = useState([]);
   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState(null);
   const [mostrarConsulta, setMostrarConsulta] = useState(false);
   const [error, setError]       = useState('');
-
-    useEffect(() => {
-       listAll();
-    }, []);
+  const navigate = useNavigate();
+  useEffect(() => {
+     listAll();
+  }, []);
   
 
   const seleccionarEmpleado = (empleado) => {
@@ -24,9 +26,47 @@ function EmployeeList() {
     }
   };
 
+  const insertar = () => {
+    navigate('/empleados/insertar');
+  }
+
+  const eliminarEmpleado = () => {
+    if (!empleadoSeleccionado) return;
+  
+    const mensajeConfirmacion = 
+      `Valor de documento: ${empleadoSeleccionado.ValorDocumentoIdentidad}\n` +
+      `Nombre: ${empleadoSeleccionado.Nombre}\n\n` +
+      `¿Está seguro de eliminar este empleado?`;
+  
+    const confirmado = window.confirm(mensajeConfirmacion) ? 1 : 0;
+    fetch('http://localhost:5000/api/empleados/eliminar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username,
+        name: empleadoSeleccionado.Nombre,
+        exitoso: confirmado
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.resultCode === 0) {
+        filtrar();
+      } else {
+        console.log(data);
+      }
+    });
+  };
+
+  const listarMovimientos = () => {
+    navigate('/empleados/movimientos', { state: { empleado: empleadoSeleccionado } });
+  }
+
   function listAll(){
     const payload = {
-      username: "Arturo"//TODO: coger del localStorage el username
+      username: username
     };
     fetch('http://localhost:5000/api/empleados/listar', {
         method: 'POST',
@@ -47,7 +87,7 @@ function EmployeeList() {
 
   function filterID(id) {
     const payload = {
-      username: "Arturo",//TODO: coger del localStorage el username
+      username: username,
       cedula : id
     };
     fetch('http://localhost:5000/api/empleados/filtrarCedula', {
@@ -69,7 +109,7 @@ function EmployeeList() {
 
   function filterName(name) {
     const payload = {
-      username: "Arturo",//TODO: coger del localStorage el username
+      username: username,
       nombre : name
     };
     fetch('http://localhost:5000/api/empleados/filtrarNombre', {
@@ -165,9 +205,9 @@ function EmployeeList() {
         <div className="actions-right">
           <button onClick={consultar} disabled={!empleadoSeleccionado}>Consultar</button>
           <button disabled={!empleadoSeleccionado}>Update</button>
-          <button disabled={!empleadoSeleccionado}>Delete</button>
-          <button disabled={!empleadoSeleccionado}>Listar Movimientos</button>
-          <button>Insertar</button>
+          <button onClick={eliminarEmpleado} disabled={!empleadoSeleccionado}>Delete</button>
+          <button onClick={listarMovimientos} disabled={!empleadoSeleccionado}>Listar Movimientos</button>
+          <button onClick={insertar}>Insertar</button>
         </div>
       </div>
     </div>
