@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
 import Login from './login/Login';
@@ -12,7 +11,6 @@ import ActualizarEmpleado from './actualizarEmpleado/actualizarEmpleado';
 const BASE_ROUTE = '/login';
 
 export default function App() {
-  // ¡Ahora useNavigate() ya está dentro de un <BrowserRouter>!
   const navigate = useNavigate();
 
   return (

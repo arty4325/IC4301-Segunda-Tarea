@@ -13,6 +13,7 @@ function Login({ onSuccess }) {
     try {
       const { data } = await axios.post('/api/login', { username, password });
       if (data.resultCode === 0) {
+        localStorage.setItem('username', username);
         onSuccess();
       } else {
         setError(data.message);

@@ -21,6 +21,7 @@ function EmployeeList() {
   };
 
   const consultar = () => {
+    console.log(username);
     if (empleadoSeleccionado) {
       setMostrarConsulta(true);
     }
@@ -54,14 +55,17 @@ function EmployeeList() {
     .then(data => {
       if (data.resultCode === 0) {
         filtrar();
-      } else {
-        console.log(data);
       }
     });
   };
 
   const listarMovimientos = () => {
     navigate('/empleados/movimientos', { state: { empleado: empleadoSeleccionado } });
+  }
+
+  const logout = () => {
+    localStorage.removeItem('username');
+    navigate('/login');
   }
 
   function listAll(){
@@ -146,6 +150,11 @@ function EmployeeList() {
 
   return (
     <div className="container">
+      
+      <div className="header-bar">
+        <button className="logout-button" onClick={logout}>Logout</button>
+      </div>
+  
       <div className="left-panel">
         <div className="filter-bar">
           <input
@@ -171,11 +180,7 @@ function EmployeeList() {
             {empleados.map((emp, idx) => (
               <tr
                 key={idx}
-                className={
-                  empleadoSeleccionado?.ValorDocumentoIdentidad === emp.ValorDocumentoIdentidad
-                    ? 'selected'
-                    : ''
-                }
+                className={empleadoSeleccionado?.ValorDocumentoIdentidad === emp.ValorDocumentoIdentidad ? 'selected' : ''}
                 onClick={() => seleccionarEmpleado(emp)}
               >
                 <td>{emp.Nombre}</td>
@@ -210,8 +215,11 @@ function EmployeeList() {
           <button onClick={insertar}>Insertar</button>
         </div>
       </div>
+  
     </div>
   );
+  
+  
   
   
 }
