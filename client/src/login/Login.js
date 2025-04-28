@@ -5,23 +5,25 @@ import './Login.css';
 function Login({ onSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError]       = useState('');
+  const [error,    setError]    = useState('');
 
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
     try {
       const { data } = await axios.post('/api/login', { username, password });
-      if (data.resultCode === 0) {
-        localStorage.setItem('username', username);
-        onSuccess();
-      } else {
-        setError(data.message);
-      }
+      localStorage.setItem('username', username);
+      onSuccess();
     } catch (err) {
-      const msg = err.response?.data?.message
-        || 'Error de conexión al servidor';
-      setError(msg);
+      const { data } = err.response || {};
+      const message = data?.message || 'Error de conexión al servidor';
+      const fails   = data?.fails;
+
+      setError(
+        fails !== undefined
+          ? `${message}  (Intentos fallidos en 20 min: ${fails})`
+          : message
+      );
     }
   };
 
@@ -30,6 +32,7 @@ function Login({ onSuccess }) {
       <form className="login-card" onSubmit={handleSubmit}>
         <h2 className="login-title">Iniciar Sesión</h2>
         {error && <div className="login-error">{error}</div>}
+
         <label>
           Usuario
           <input
@@ -40,6 +43,7 @@ function Login({ onSuccess }) {
             required
           />
         </label>
+
         <label>
           Contraseña
           <input
@@ -50,9 +54,8 @@ function Login({ onSuccess }) {
             required
           />
         </label>
-        <button type="submit" className="login-button">
-          Entrar
-        </button>
+
+        <button type="submit" className="login-button">Entrar</button>
       </form>
     </div>
   );

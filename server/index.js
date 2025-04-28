@@ -23,10 +23,10 @@ const dbConfig = {
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
+
   if (!username || !password) {
     return res.status(400).json({ error: 'Faltan username o password' });
   }
-
 
   const clientIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress)
                      .split(',')[0]
@@ -37,21 +37,22 @@ app.post('/api/login', async (req, res) => {
 
     const dbReq = new sql.Request();
     dbReq
-      .input('inUsername',    sql.NVarChar(100), username)
-      .input('inPassword',    sql.NVarChar(256), password)
-      .input('inPostInIP',    sql.VarChar(45),   clientIp)
+      .input('inUsername',     sql.NVarChar(100), username)
+      .input('inPassword',     sql.NVarChar(256), password)
+      .input('inPostInIP',     sql.VarChar(45),   clientIp)
       .output('outResultCode', sql.Int)
-      .output('outMessage',    sql.NVarChar(sql.MAX));
+      .output('outMessage',    sql.NVarChar(sql.MAX))
+      .output('outFails20',    sql.Int);           
 
-    const result = await dbReq.execute('dbo.Login');
-    const code    = result.output.outResultCode;
-    const message = result.output.outMessage;
+    const result   = await dbReq.execute('dbo.Login');
+    const code     = result.output.outResultCode;
+    const message  = result.output.outMessage;
+    const fails20  = result.output.outFails20;     
 
-    if (code === 0) {
-      return res.json({ resultCode: code, message });
-    } else {
-      return res.status(401).json({ resultCode: code, message });
-    }
+    return res
+      .status(code === 0 ? 200 : 401)
+      .json({ resultCode: code, message, fails: fails20 });
+
   } catch (err) {
     console.error('Error al conectar o ejecutar SP:', err);
     return res.status(500).json({ error: 'Error de base de datos' });
