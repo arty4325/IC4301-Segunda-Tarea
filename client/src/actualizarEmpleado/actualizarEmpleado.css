@@ -1,0 +1,53 @@
+.update-form-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 450px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  .form-buttons button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  
+  .cancel-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  
+  .cancel-button:hover {
+    background-color: #d32f2f;
+  }
+
+  .insertar-error {
+    color: red;
+    margin-top: -0.5rem;
+    font-size: 0.95rem;
+  }
+  

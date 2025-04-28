@@ -63,6 +63,10 @@ function EmployeeList() {
     navigate('/empleados/movimientos', { state: { empleado: empleadoSeleccionado } });
   }
 
+  const actualizar = () => {
+    navigate('/empleados/actualizar', { state: { empleado: empleadoSeleccionado } });
+  }
+
   const logout = () => {
     localStorage.removeItem('username');
     navigate('/login');
@@ -209,7 +213,7 @@ function EmployeeList() {
   
         <div className="actions-right">
           <button onClick={consultar} disabled={!empleadoSeleccionado}>Consultar</button>
-          <button disabled={!empleadoSeleccionado}>Update</button>
+          <button onClick={actualizar} disabled={!empleadoSeleccionado}>Update</button>
           <button onClick={eliminarEmpleado} disabled={!empleadoSeleccionado}>Delete</button>
           <button onClick={listarMovimientos} disabled={!empleadoSeleccionado}>Listar Movimientos</button>
           <button onClick={insertar}>Insertar</button>
