@@ -52,9 +52,7 @@ function InsertarEmpleado() {
 
   const handleInsertar = () => {
     setError('');
-    console.log("antes de validar");
     if (!validar()) return;
-    console.log("despues de validar");
     fetch('http://localhost:5000/api/empleados/insertar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -68,7 +66,6 @@ function InsertarEmpleado() {
     .then(res => res.json())
     .then(data => {
       if (data.resultCode === 0) {
-        
         navigate('/empleados'); 
       } else {
         setError(data.message);
