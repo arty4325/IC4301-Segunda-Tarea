@@ -41,6 +41,7 @@ function InsertarMovimiento() {
     e.preventDefault();
     setError('');
     if (!tipoSeleccionado || !monto) { setError('Debe seleccionar tipo y monto'); return; }
+    if (monto <= 0) { setError('El monto debe ser mayor a 0'); return; }
     setSubmitting(true);
     try {
       const res  = await fetch('/api/movimientos/insertar', {
@@ -100,10 +101,10 @@ function InsertarMovimiento() {
             Monto
             <input
               type="number"
-              step="0.01"
+              step="1"
               value={monto}
               onChange={e => setMonto(e.target.value)}
-              placeholder="0.00"
+              placeholder="0"
             />
           </label>
           <div className="im-buttons">

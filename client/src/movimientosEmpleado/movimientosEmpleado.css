@@ -12,8 +12,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    gap: 1rem;
   }
+  
   
   .insert-button {
     background-color: #007bff;
@@ -64,3 +66,30 @@
     margin: 1rem 0;
   }
   
+  .header-bar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .volver-button {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .volver-button:hover {
+    background-color: #d32f2f;
+  }

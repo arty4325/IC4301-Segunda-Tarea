@@ -38,6 +38,10 @@ function MovimientosEmpleado() {
     fetchMovimientos();
   }, [empleado]);
 
+  const volver = () => {
+    navigate('/empleados');
+  }
+
   const handleInsertar = () => {
     navigate('/empleados/movimiento/incertar', {
       state: {
@@ -56,6 +60,9 @@ function MovimientosEmpleado() {
   return (
     <div className="movimientos-container">
       <header className="movimientos-header">
+        <button className="volver-button" onClick={volver}>
+          Volver
+        </button>
         <h1>Movimientos de {empleado.Nombre}</h1>
         <button className="insert-button" onClick={handleInsertar}>
           + Insertar Movimiento
